@@ -1,5 +1,8 @@
 // trả về 1 đói tượng dom
 const btnSignUpSelector = document.querySelector(".btn-signup");
+const inputNameSelector = document.querySelector(".name");
+const inputEmailSelector = document.querySelector(".email");
+const inputPasswordSelector = document.querySelector(".password");
 
 const inputAllSeclector = document.querySelectorAll(".form-group input");
 
@@ -11,6 +14,7 @@ function handleSignUpClick(event) {
     // event.preventDefault(); = Ngăn hành vi mặc định của trình duyệt.
     // // Dùng trong các sự kiện như: submit, click, keydown, drag, v.v.
     event.preventDefault();
+    let isFormValid = true;
     //1 thực hiện validate
     // i = 0  i < 3
     for (let i = 0; i < inputAllSeclector.length; i++) {
@@ -25,56 +29,74 @@ function handleSignUpClick(event) {
         let name = inputSelector.name;
         // validate not empty
         if (name === 'name') {
-            // require
-            if(!require(inputSelector)){
-                // show error
-                showError(inputSelector, 'tên không được để trống');
-            }else{
-                // show success
-                showSucces(inputSelector);
+            let isRequireValid = requireValidate (inputSelector ,name);
+            if(isRequireValid){
+                showSucces(inputSelector,divMessageSelector);   
+            }
+        } else if (name === "email") {
+            let isRequireValid = requireValidate (inputSelector ,name);
+            let isMinLengthValid;
+            if(isRequireValid){
+                // validate email tối thiểu 3 kí tự
+                isMinLengthValid = minLengthValidate(inputSelector ,name ,'nhap email tối thiểu 3 kí tụ');
+            }
+            // validate email
+            let isEmailRegexValid;
+            if(isRequireValid && isMinLengthValid){
+                isEmailRegexValid = emailRegexValidate(inputSelector ,name);
+            }
+            // validate khác
+            // check validate success 
+            if(isRequireValid && isMinLengthValid  && isEmailRegexValid){
+                showSucces(inputSelector,divMessageSelector);
+            }
+        } else if (name === "password") {
+            let isRequireValid = requireValidate (inputSelector ,name);
+            let isMinLengthValid;
+            // validate email tối thiểu 8 kí tự
+            if(isRequireValid){
+                isMinLengthValid =  minLengthValidate(inputSelector ,name ,'password tối thiểu 8 kí tụ cho bảo mật ')
             }
             
-        } else if (name === "email") {
-            //1. require
-            //2. minlength
-            //3. regex validate email
-            
-            
-        } else if (name === "password") {
-            //1. require
-            //2. minlength
-        }else{
-            //1. require
-            //2. minlength
-            //3. compare pass
             // CHECK SUCCEST    
-            
+            if(isRequireValid && isMinLengthValid){
+                showSucces(inputSelector,divMessageSelector);
+            }
+        }else{
+            let isRequireValid = requireValidate (inputSelector ,name);
+            let isMinLengthValid;
+            let isCompareValid;
+            // validate email tối thiểu 8 kí tự
+            if(isRequireValid){
+                isMinLengthValid =  minLengthValidate(inputSelector ,name ,'confirm password tối thiểu 8 kí tụ cho bảo mật ')
+            }
+
+            if(isRequireValid && isMinLengthValid){
+                // valiidate compare with password
+                isCompareValid = requireValidateCompare(inputSelector,name);
+            }
+            // CHECK SUCCEST    
+            if(isRequireValid && isMinLengthValid && isCompareValid){
+                showSucces(inputSelector,divMessageSelector);
+            }
         }
         
     }
 
     // kiểm tra ko có ô input nào có lỗi validate
     // lưu user vào localstorage
+    for(let i = 0;i<errorMessageAll.length;i++){
+        if(errorMessageAll[i].textContent !== ''){
+            isFormValid =false;
+            break;
+        }
+    }
+    if(isFormValid){
+        console.log('to page login');
+    }
 
 }
-
-
-// ruler require
-// 
-function require(inputSelector){
-    return inputSelector.value ? true :false;
-}
-
-function showError(inputSelector ,message = null){
-    // kiểm thị màu đỏ cho ô input
-    inputSelector.classList.add('error');
-    // thêm nội dung lỗi cho div message dưới ô input
-    let divMessageSelector = inputSelector.closest(".form-group").querySelector(".error_message");
-    divMessageSelector.textContent = message;
-}
-
-function showSucces(inputSelector){
-    let divMessageSelector = inputSelector.closest(".form-group").querySelector(".error_message");
+function showSucces(inputSelector,divMessageSelector){
     inputSelector.classList.remove("error");
     divMessageSelector.textContent = '';
 }
