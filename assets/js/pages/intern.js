@@ -101,7 +101,7 @@ function showSucces(inputSelector,divMessageSelector){
     divMessageSelector.textContent = '';
 }
 
-// rule compare data
+// rule compare data So sánh giá trị input này với input khác (confirm password vs password)
 function requireValidateCompare(inputSelector,name,message){
     let ivaLid = true;
     let valueInput = inputSelector.value;
@@ -117,13 +117,13 @@ function requireValidateCompare(inputSelector,name,message){
             messageError = message;
         }
         // Hiển thị nội dung lỗi (messageError) vào phần tử thông báo lỗi.
-        divMessageSelector.textContent = messageError;
+        divMessageSelector.textContent = messageError; 
     } 
     return ivaLid;
 }
 
 
-// rule require validate
+// rule require validate  Kiểm tra input không được để trống
 function requireValidate (inputSelector ,name ,message){
     //1) kiểm tra xem ruler có hợp lệ hay k
     //2) nếu ko hợp lệ hiển thị thông báo lỗi ở ô input
@@ -144,7 +144,7 @@ function requireValidate (inputSelector ,name ,message){
     }
     return ivaLid;
 }
-// rule value email
+// rule value email Kiểm tra định dạng email có hợp lệ không (dùng regex)
 function emailRegexValidate(inputSelector ,name ,message){
     let ivaLid = true;
     let valueInput = inputSelector.value;
@@ -162,6 +162,8 @@ function emailRegexValidate(inputSelector ,name ,message){
     return ivaLid;
 }
 
+
+// Kiểm tra input có đủ số ký tự tối thiểu không
 function minLengthValidate(inputSelector, name ,message){
     let ivaLid = true;
     let valueInput = inputSelector.value;
